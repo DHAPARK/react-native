@@ -2,6 +2,9 @@ import * as React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+const Stack = createNativeStackNavigator();
+
+
 import Index from './pages/Index';
 import PaymentOne from './pages/PaymentOne';
 import UserInfo from './pages/UserInfo';
@@ -10,12 +13,12 @@ import Login from './pages/Login';
 
 import ExpoCamera from './expoCamera/ExpoCamera';
 import { Camera } from 'expo-camera';
-const Stack = createNativeStackNavigator();
 
 function App(){
   return(
     <NavigationContainer>
       <Stack.Navigator>
+
         <Stack.Screen name="Login" component={Login} options={{title:'로그인'}}/>
         <Stack.Screen name="Regist" component={Regist} options={{title:'회원가입'}}/>
         <Stack.Screen name="PaymentOne" component={PaymentOne} options={{title:'결제 화면1'}}/>

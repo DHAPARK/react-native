@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import _ from 'lodash';
-import IndexContainer from '../components/IndexComponents/IndexContainer';
-import IndexPageButton from '../components/IndexComponents/IndexPageButton';
-import IndexContents from '../components/IndexComponents/IndexContents';
+import PaymentOneContainer from '../components/PaymentOneComponents/PaymentOneContainer';
+import PaymentOnePageButton from '../components/PaymentOneComponents/PaymentOnePageButton';
+import PaymentOneContents from '../components/PaymentOneComponents/PaymentOneContents';
 //qr코드 영역
-import QRarea from '../components/IndexComponents/QRarea';
+import QRarea from '../components/PaymentOneComponents/QRarea';
 //import Text from '../components/Container';
 //import UserInfo from './UserInfo';
 
@@ -28,12 +28,12 @@ const Text = styled.Text`
 `;
 
 function PaymentOne({navigation,route}){
-    const userid = route.params.userid;
-    const userWalletDist = route.params.userWalletDist;
+    //const userid = route.params.userid;
+    //const userWalletDist = route.params.userWalletDist;
 
     return(
-        <IndexContainer>
-            <IndexContents>
+        <PaymentOneContainer>
+            <PaymentOneContents>
                 {/*
                     여기에 QR코드 띄워주는 div넣어야함
                     조건 1. Contents 내부를 80% 채우고
@@ -46,10 +46,10 @@ function PaymentOne({navigation,route}){
                     <Image source={QRCode} style={styles.image}/>
                 </QRarea>
                 
-            </IndexContents>
+            </PaymentOneContents>
             
-            <IndexPageButton onPress={()=>navigation.navigate('UserInfo',{id : userid, wd : userWalletDist})}>내 정보</IndexPageButton>
-        </IndexContainer>
+            <PaymentOnePageButton onPress={()=>navigation.navigate('UserInfo',{id : userid, wd : userWalletDist})}>내 정보</PaymentOnePageButton>
+        </PaymentOneContainer>
     );
 };
 const styles = StyleSheet.create({

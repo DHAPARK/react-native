@@ -19,7 +19,7 @@ function LoginPageLogo(props){
     return (
         <Container onPress = {props.onPress}>
             {/*<Label>{props.children}</Label>*/}
-            <Image source={require('../../image/LoginPageImage/Logo.png')} style={styles.image}></Image>
+            <Image source={require('../../image/LoginPageImage/HSC_logo.png')} style={styles.image}></Image>
         </Container>
     )
 }
