@@ -33,7 +33,8 @@ import RegistConstraintArea from '../components/RegistComponents/RegistConstrain
 
 import ConstraintText from '../components/RegistComponents/ConstraintText';
 
-
+import axios from 'axios';
+import qs from 'qs';
 
 function Regist({navigation}){
     
@@ -46,33 +47,70 @@ function Regist({navigation}){
     const [userWalletDist,setUserWalletDist] = React.useState('');
     
     const store = async ()=>{
+        const name = username;
+        const password = userpw;
+        const gender = '여';
+        const userWalletDist = userWalletDist;
+        
+        
+        let list;
         if(userid === '') return;
         if(userpw === '') return;
         if(username === '') return;
         if(useremail === '') return;
         if(userphone === '') return;
-        //
+        
         if(userWalletDist === '') return;
 
-        let list = await AsyncStorage.getItem( userid );
+        //let list = await AsyncStorage.getItem( userid );
+        //여기에서 joinMember/:userid 로 보낼 axios 작성
+        /*
         if(list === null){
             list = [];
         }else{
-            list = JSON.parse(list);
+            //list = JSON.parse(list);
+            
         }
-
-        list.push({
-            userid,
-            userpw,
-            username,
-            useremail,
-            userphone,
-            //
-            userWalletDist
-        });
+        */
+        console.log(`여기까지옴 밝은`);
         
-        await AsyncStorage.setItem(userid,JSON.stringify(list));
-        navigation.goBack();
+        const data = {
+            'password':userpw,
+            'name':username,
+            'useremail':useremail,
+            'userphone':userphone,
+            'userWalletDist':userWalletDist
+        }
+        /*
+        const data = {
+            'password':userpw,
+            name:username,
+            useremail:useremail,
+            userphone:userphone,
+            userWalletDist:userWalletDist
+        }
+        */
+        console.log(`여기까지옴 별`);
+        //axios 통신
+        axios({
+            method:"POST",
+            url: `http://127.0.0.1:3000/joinMember/${userid}`,
+            data: qs.stringify(data),
+        }).then((res)=>{
+            console.log(data);
+            console.log(`서버와 연결 성공`);
+            navigation.goBack();
+        }).catch(error=>{
+            console.log(`서버와 연결 실패 ${error}`);
+            throw new Error(error);
+        });
+        //axios 통신
+
+
+
+        console.log(`여기까지옴 별`);
+
+        //여기에서 joinMember/:userid 로 보낼 axios 작성 
     }
 
     return(

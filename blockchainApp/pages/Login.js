@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+//import AsyncStorage from '@react-native-async-storage/async-storage';
 import _ from 'lodash';
 import LoginContainer from '../components/LoginComponents/LoginContainer';
 import LoginContents from '../components/LoginComponents/LoginContents';
@@ -9,6 +9,9 @@ import LoginPageButton from '../components/LoginComponents/LoginPageButton';
 //로고부분 
 import LoginPageLogo from '../components/LoginComponents/LoginPageLogo';
 import LoginIdAndPw from '../components/LoginComponents/LoginIdAndPw';
+
+import axios from 'axios';
+
 
 import {Platform,StyleSheet} from 'react-native';
 
@@ -61,30 +64,45 @@ function Login({navigation}){
     const loginOk = async ()=>{
         if( id === '') return;
         if( pw === '') return;
-        let list = await AsyncStorage.getItem(id);
-        //이부분 조심
-        if(list === null){
-            
-            return;
-        }else{
-            let userinfo = JSON.parse(list);
-            console.log(userinfo);
-            const db_id = userinfo[0].userid;
-            const db_pw = userinfo[0].userpw;
-            const wald = userinfo[0].userWalletDist;
-            //{_.sortBy(list,'userid').map(item => {
-                if(db_id === id && db_pw === pw){
-                    navigation.navigate('Index',{userid : db_id,userWalletDist : wald});
-                    //console.log(`tlist : ${list}`);
-                    
-                }else{
-                    
-                }
-        //})}
+        let list;
+        //let list = await AsyncStorage.getItem(id);
+        //이부분에서 서버와 통신 후 id pw를 받아와 로그인가능한지 확인해야함 130
+        //json형태로 받아올것
         
-        }//else끝
-    
-        //이부분 조심
+        axios({
+            method:"GET",
+            url: `http://127.0.0.1:3000/getMember/${id}/${pw}`,
+        }).then((res)=>{
+            list = JSON.stringify(res.data);
+            //이부분 조심
+            if(list === null){
+                return;
+            }else{
+                
+                let userinfo = JSON.parse(list);
+                console.log(`왜안먹지?`);
+                console.log(`userifno는 ${userinfo}`);
+                
+                const db_id = id;
+                const db_pw = userinfo["password"];
+                console.log(`db_pw : ${db_pw}`);
+                const wald = userinfo["userWalletDist"];
+                //{_.sortBy(list,'userid').map(item => {
+                    if(db_id === id && db_pw === pw){
+                        navigation.navigate('Index',{userid : db_id,userWalletDist : wald});       
+                    }else{
+                        
+                    }
+            //})}
+            }//else끝
+            //이부분 조심
+
+        }).catch(error=>{
+            console.log(error);
+            throw new Error(error);
+        });
+
+        
         
     }
     return(
