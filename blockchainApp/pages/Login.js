@@ -96,12 +96,25 @@ function Login({navigation}){
             //})}
             }//else끝
             //이부분 조심
-
         }).catch(error=>{
+            if(error.response){
+            console.log('벌레',error.response.data);
+            console.log('송곳',error.response.status);
+            console.log('무더위',error.response.headers);
+            }else if(error.request){
+                console.log(`나무${error.request}`);
+            }else{
+                console.log('파랑새 Error',error.message);
+            }
+            console.log('참새',error.config);
+        });
+        
+        /* 원래 이 코드로 예외처리를 사용했었는데 안드로이드에서만 갑자기 오류발생
+        .catch(error=>{
             console.log(error);
             throw new Error(error);
         });
-
+        */
         
         
     }

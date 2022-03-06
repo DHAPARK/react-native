@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import _ from 'lodash';
 import RegistContainer from '../components/RegistComponents/RegistContainer';
@@ -22,9 +21,7 @@ import RegistButton from '../components/RegistComponents/RegistButton';
 import SmallContainerForBottomButton from '../components/RegistComponents/SmallContainerForBottomButton';
 
 //Picker 실험 보류
-//import RegistGenderPicker from '../components/RegistComponents/RegistGenderPicker';
-//import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
-//import { StyleSheet,Text } from 'react-native';
+
 
 import SmallContainerForMiddlePicker from '../components/RegistComponents/SmallContainerForMiddlePicker';
 
@@ -61,17 +58,11 @@ function Regist({navigation}){
         if(userphone === '') return;
         
         if(userWalletDist === '') return;
-
+        //나중에 session 관리할떄를 위해 남겨둔 코드
         //let list = await AsyncStorage.getItem( userid );
+
         //여기에서 joinMember/:userid 로 보낼 axios 작성
-        /*
-        if(list === null){
-            list = [];
-        }else{
-            //list = JSON.parse(list);
-            
-        }
-        */
+        
         console.log(`여기까지옴 밝은`);
         
         const data = {
@@ -81,15 +72,7 @@ function Regist({navigation}){
             'userphone':userphone,
             'userWalletDist':userWalletDist
         }
-        /*
-        const data = {
-            'password':userpw,
-            name:username,
-            useremail:useremail,
-            userphone:userphone,
-            userWalletDist:userWalletDist
-        }
-        */
+        
         console.log(`여기까지옴 별`);
         //axios 통신
         axios({
@@ -105,8 +88,6 @@ function Regist({navigation}){
             throw new Error(error);
         });
         //axios 통신
-
-
 
         console.log(`여기까지옴 별`);
 
