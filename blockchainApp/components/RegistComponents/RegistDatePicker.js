@@ -21,7 +21,9 @@ const Label = styled.Text`
 function RegistDatePicker(props){
     return (
         <Container>
-            <Label>{props.text}</Label>
+            <Label
+                onChangeText={props.onChangeText}
+            >{props.text}</Label>
         </Container>
     )
 }

@@ -21,7 +21,7 @@ import RegistButton from '../components/RegistComponents/RegistButton';
 import SmallContainerForBottomButton from '../components/RegistComponents/SmallContainerForBottomButton';
 
 //Picker 실험 보류
-
+import Test from '../components/RegistComponents/Test';
 
 import SmallContainerForMiddlePicker from '../components/RegistComponents/SmallContainerForMiddlePicker';
 
@@ -32,22 +32,52 @@ import ConstraintText from '../components/RegistComponents/ConstraintText';
 
 import axios from 'axios';
 import qs from 'qs';
+import { useEffect } from 'react/cjs/react.production.min';
 
 function Regist({navigation}){
+    const [fullDate,setFullDate] = React.useState('2022-03-03');
+    
+    const [year,setYear] = React.useState('');
+    const [month,setMonth] = React.useState('');
+    const [day,setDay] = React.useState('');
+    
     
     const [userid,setUserid] = React.useState('');
     const [userpw,setUserpw] = React.useState('');
     const [username,setUsername] = React.useState('');
     const [useremail,setUseremail] = React.useState('');
     const [userphone,setUserphone] = React.useState('');
+
+    
+
+    //처음 datepicker 초기값 세팅을 위한 setter
+    // var flag=false;
+    // var promise = new Promise((res,rej)=>{
+    //     res('2022-03-03');
+    // })
+    // promise
+    // .then((message)=>{
+    //     console.log(message);
+    // })
+    // .catch((err)=>{
+    //     console.log(err);
+    // })
+    // .finally(()=>{
+    //     if(flag==false){
+    //         setFullDate('2022-03-03');
+    //         flag=true;
+    //     }
+    // })
+    // //미치겠네;;
+
     //
-    const [userWalletDist,setUserWalletDist] = React.useState('');
+    //const [userWalletDist,setUserWalletDist] = React.useState('');
     
     const store = async ()=>{
         const name = username;
         const password = userpw;
         const gender = '여';
-        const userWalletDist = userWalletDist;
+        //const userWalletDist = userWalletDist;
         
         
         let list;
@@ -56,24 +86,30 @@ function Regist({navigation}){
         if(username === '') return;
         if(useremail === '') return;
         if(userphone === '') return;
-        
-        if(userWalletDist === '') return;
+        //날짜는 상관없으니 일단 2022년만 아니게 해놓음
+        if(year >= 2022) return;
+
+
+        //if(userWalletDist === '') return;
         //나중에 session 관리할떄를 위해 남겨둔 코드
         //let list = await AsyncStorage.getItem( userid );
 
         //여기에서 joinMember/:userid 로 보낼 axios 작성
         
-        console.log(`여기까지옴 밝은`);
+        
         
         const data = {
             'password':userpw,
             'name':username,
             'useremail':useremail,
             'userphone':userphone,
-            'userWalletDist':userWalletDist
+            'year':year,
+            'month':month,
+            'day':day,
+            //'userWalletDist':userWalletDist
         }
         
-        console.log(`여기까지옴 별`);
+        
         //axios 통신
         axios({
             method:"POST",
@@ -89,7 +125,7 @@ function Regist({navigation}){
         });
         //axios 통신
 
-        console.log(`여기까지옴 별`);
+        
 
         //여기에서 joinMember/:userid 로 보낼 axios 작성 
     }
@@ -150,11 +186,18 @@ function Regist({navigation}){
                 {/*원래 picker 제작하던 자리*/}    
 
 
-                {/* middle Container 따로 제작 */}
+                {/* middle Container 따로 제작 여기건드리면 자살; */}
                 <SmallContainerForMiddlePicker>
-                    <RegistDatePicker text='1970  ▼'></RegistDatePicker>
-                    <RegistDatePicker text='01  ▼'></RegistDatePicker>
-                    <RegistDatePicker text='01  ▼'></RegistDatePicker>
+                    <Test text={fullDate} onDateChange={(value) => {
+                        setFullDate(value);
+                        setYear(`${value.split('-')[0]}`);
+                        setMonth(`${fullDate.split('-')[1]}`);
+                        setDay(`${fullDate.split('-')[2]}`);
+                        
+                        }}/>
+                    <RegistDatePicker text={`${fullDate.split('-')[0]} ▼`}></RegistDatePicker>
+                    <RegistDatePicker text={`${fullDate.split('-')[1]} ▼`}></RegistDatePicker>
+                    <RegistDatePicker text={`${fullDate.split('-')[2]} ▼`}></RegistDatePicker>
                 </SmallContainerForMiddlePicker>
 
 

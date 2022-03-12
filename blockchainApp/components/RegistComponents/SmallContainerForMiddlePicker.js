@@ -10,6 +10,7 @@ const SmallContainerForMiddlePicker = styled.SafeAreaView`
     width:100%;
     flex-direction:row;
     justify-content:center;
+    position:relative;
 `;
 
 export default SmallContainerForMiddlePicker;
