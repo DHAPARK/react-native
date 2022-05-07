@@ -66,14 +66,16 @@ module.exports = (app,fs,admin,firestore,serviceAccount,join,userlogin,checkIdDu
             
         }
         doit();
-        
     })
 
 
-    app.get('/getMyBalance/:userid',(req,res)=>{
+    app.get('/getMyBalance/:userAccount',(req,res)=>{
         const userAgent = req.header('user-agent');
         console.log(userAgent);
-        
+        const userAccount = req.params.userAccount;
+        console.log(`getMyBalance 의 유저 어카운트 : ${userAccount}`);
+        //balanceInquiry(userAccount);
+        res.json(balanceInquiry(userAccount));
     })
 
 }

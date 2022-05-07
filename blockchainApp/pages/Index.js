@@ -37,7 +37,24 @@ function Index({navigation,route}){
         console.log('아이디 : ' + UserInfo.userid); //
         console.log('비번 : ' + UserInfo.userpw); //  
         console.log('계정 : ' + UserInfo.userAccount); //
-      });
+        return UserInfo;
+    })
+    .then((userInfo)=>{
+        const userAccount = userInfo.userAccount;
+        axios({
+            method:"GET",
+            url: `http://127.0.0.1:3000/getMyBalance/${userAccount}`,
+        })
+        .then((data)=>{
+            return data;
+        })
+        .then((result)=>{
+            console.log(`서버로부터 받은 이더량은 ${result}`);
+        })
+    })
+
+    
+
 
     return(
         <Container>
