@@ -4,11 +4,11 @@
 const HSCOIN_ADDRESS = '0x0Ab89981bBdAf549b0401f221bDD4F3EC3aC52Ee'; // hscoin 컨트랙트 주소
 const HSCOIN_ABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"name_","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"symbol_","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}];
 const node_host = `https://ropsten.infura.io/v3/${'9d7d720107794fe49bf52b5fa9965761'}`; // infura Test 프로젝트 id
-const Web3 = require('web3');
+//const Web3 = require('web3');
 const BigNumber = require('bignumber.js');
 let accountList; 
 let hsContract;
-let web3;
+//let web3;
 
 //jsonlink.com json 문법 검증
 
@@ -37,10 +37,11 @@ var firestore = require("firebase-admin/firestore");
 var auth = require("firebase-admin/auth");
 var serviceAccount = require("./hscoin-d8ff7-firebase-adminsdk-unmpe-a6a77a60b5.json");
 
-initWeb3();
+//initWeb3();
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
+
 const login = auth.getAuth();
 
 const db = firestore.getFirestore();
@@ -112,7 +113,7 @@ async function checkUsageDetails(inquiryAddress) {
 
 //회원가입 firebase 이용
 async function join(userid,userpw,username,useremail,userphone,year,month,day) {
-    let accountAddress = await web3.eth.personal.newAccount(userpw);
+    //let accountAddress = await web3.eth.personal.newAccount(userpw);
     db.collection("users").doc(userid).set({
         userid: userid,
         userpw: userpw,
@@ -123,7 +124,7 @@ async function join(userid,userpw,username,useremail,userphone,year,month,day) {
         year: year,
         month: month,
         day: day,
-        accountAddress: accountAddress
+        //accountAddress: accountAddress
     });
 }
 

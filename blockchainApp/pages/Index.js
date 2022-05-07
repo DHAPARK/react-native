@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import {Text} from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 //맨윗부분 로고와 내 지갑 담는 Small Container
 import IndexTopSmallContainer from '../components/IndexComponents/IndexTopSmallContainer';
 
@@ -32,6 +32,12 @@ const SmallContainer = styled.SafeAreaView`
 function Index({navigation,route}){
     //const userid = route.params.userid;
     //const userWalletDist = route.params.userWalletDist;
+    AsyncStorage.getItem('userinformation', (err, result) => {
+        const UserInfo = JSON.parse(result);
+        console.log('아이디 : ' + UserInfo.userid); //
+        console.log('비번 : ' + UserInfo.userpw); //  
+        console.log('계정 : ' + UserInfo.userAccount); //
+      });
 
     return(
         <Container>
