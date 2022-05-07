@@ -75,7 +75,11 @@ module.exports = (app,fs,admin,firestore,serviceAccount,join,userlogin,checkIdDu
         const userAccount = req.params.userAccount;
         console.log(`getMyBalance 의 유저 어카운트 : ${userAccount}`);
         //balanceInquiry(userAccount);
-        res.json(balanceInquiry(userAccount));
+        const userAccountValue = {
+            'userAccountValue':1200
+        }
+        res.json(userAccountValue);
+        //res.json(balanceInquiry(userAccount));
     })
 
 }

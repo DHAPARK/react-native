@@ -15,6 +15,8 @@ import IndexRemittancePaymentButton from '../components/IndexComponents/IndexRem
 
 //맨 하단 NavList
 import IndexBottomNavList from '../components/IndexComponents/IndexBottomNavList';
+//
+import axios from 'axios';
 
 const Container = styled.SafeAreaView`
     flex : 1;
@@ -40,7 +42,9 @@ function Index({navigation,route}){
         return UserInfo;
     })
     .then((userInfo)=>{
-        const userAccount = userInfo.userAccount;
+        const userAccount = JSON.parse(userInfo)['userAccount'];
+        
+        console.log(`시발설마2 ${userAccount}`);
         axios({
             method:"GET",
             url: `http://127.0.0.1:3000/getMyBalance/${userAccount}`,
@@ -50,6 +54,7 @@ function Index({navigation,route}){
         })
         .then((result)=>{
             console.log(`서버로부터 받은 이더량은 ${result}`);
+            console.log(`이더리움 ${JSON.stringify(result)}`);
         })
     })
 

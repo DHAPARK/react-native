@@ -30,7 +30,7 @@ function NoticeTopSmallContainer(){
     return(
         <Container>
             <Image source={require('../../image/logo2.png')} style={styles.image}></Image>
-            <Text style={styles.text}>공지</Text>
+            <Text style={styles.text}>QR</Text>
         </Container>
     )
 }
