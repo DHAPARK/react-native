@@ -1,50 +1,31 @@
-//도현
-
-//Hscoin 관련 정보
-const HSCOIN_ADDRESS = '0x0Ab89981bBdAf549b0401f221bDD4F3EC3aC52Ee'; // hscoin 컨트랙트 주소
-const HSCOIN_ABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"name_","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"symbol_","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}];
-const node_host = `https://ropsten.infura.io/v3/${'9d7d720107794fe49bf52b5fa9965761'}`; // infura Test 프로젝트 id
-//const Web3 = require('web3');
-const BigNumber = require('bignumber.js');
-let accountList; 
-let hsContract;
-//let web3;
-
-//jsonlink.com json 문법 검증
-
 const express = require('express');
 const app = express();
 const fs = require('fs');
-//const port = 80;
-const port = 3000;
 const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended:false}));
-//firebase 이식
-//const getDocs = require('firebase/firestore');
-var createError = require('http-errors');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const Web3 = require('web3');
+const BigNumber = require('bignumber.js');
+const createError = require('http-errors');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const admin = require("firebase-admin");
+const firestore = require("firebase-admin/firestore");
+const auth = require("firebase-admin/auth");
+const serviceAccount = require("./hscoin-d8ff7-firebase-adminsdk-unmpe-a6a77a60b5.json");
+const { send } = require('process');
+const PORT = 80;
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+//Hscoin 관련 정보
+const NODE_HOST = `https://ropsten.infura.io/v3/${'9d7d720107794fe49bf52b5fa9965761'}`; // infura Test 프로젝트 id
+const HSCOIN_ADDRESS = '0x37f7f7d072079B7970188180F7658137122Cb099'; // hscoin 컨트랙트 주소
+const HSCOIN_JSON_FILE = '../hscoin-contract/build/contract/Hscoin.json';
+const HSCOIN_JSON_PARSED = JSON.parse(fs.readFileSync(jsonFile));
+const HSCOIN_ABI = HSCOIN_JSON_PARSED.abi;
 
-//var firebase = require("firebase");
-var admin = require("firebase-admin");
-var firestore = require("firebase-admin/firestore");
-var auth = require("firebase-admin/auth");
-var serviceAccount = require("./hscoin-d8ff7-firebase-adminsdk-unmpe-a6a77a60b5.json");
+let accountList;
+let hsContract;
+let web3;
 
-//initWeb3();
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-});
-
-const login = auth.getAuth();
-
-const db = firestore.getFirestore();
 async function initWeb3() {
     web3 = new Web3('http://127.0.0.1:8545');
     accountList = await web3.eth.getAccounts();
@@ -57,7 +38,7 @@ async function initWeb3() {
  * @param {string} receiverAddress 송신측 주소
  * @param {int} amount 보낼 금액
  */
- async function transferHSC(senderAddress, receiverAddress, amount) {
+async function transferHSC(senderAddress, receiverAddress, amount) {
     let decimals = await hsContract.methods.decimals();
     await hsContract.methods.transfer(receiverAddress, amount * 10 ** decimals).send({from:senderAddress});
 }
@@ -88,15 +69,15 @@ async function payment(senderAddress, receiverAddress, amount) {
     senderBalance < amount ? isSuccess = false : isSuccess = true;
 }
 
-// 계좌 잔액 조회(보내는 사람 주소) => HSC값으로 리턴(소수점 자리 클 수 있음)
 /**
  * 계정의 HSC 보유값 리턴
  * @param {string} inquiryAddress 조회할 계정 주소
  * @returns {float} ETH 값으로 리턴
  */
- async function balanceInquiry(inquiryAddress) {
+async function balanceInquiry(inquiryAddress) {
     let hsBalanceWei = await hsContract.methods.balanceOf(inquiryAddress).call();
     let hsBalanceEth = web3.utils.fromWei(hsBalanceWei, 'ether');
+
     return hsBalanceEth;
 }
 
@@ -109,11 +90,10 @@ async function checkUsageDetails(inquiryAddress) {
 
 }
 
-
-
 //회원가입 firebase 이용
 async function join(userid,userpw,username,useremail,userphone,year,month,day) {
-    //let accountAddress = await web3.eth.personal.newAccount(userpw);
+    let accountAddress = await web3.eth.personal.newAccount(userpw);
+    await hsContract.methods.transfer(accountAddress, new BigNumber(100 * 10 ** 18)).send({from:accountList[0]});
     db.collection("users").doc(userid).set({
         userid: userid,
         userpw: userpw,
@@ -124,7 +104,7 @@ async function join(userid,userpw,username,useremail,userphone,year,month,day) {
         year: year,
         month: month,
         day: day,
-        //accountAddress: accountAddress
+        accountAddress: accountAddress
     });
 }
 
@@ -184,32 +164,37 @@ function userlogin(id,pw) {
     let member = {};
     
         ps.onSnapshot(docSnapshot => {
-            password = docSnapshot["_fieldsProto"]["userpw"]["stringValue"];
-            userid = docSnapshot["_fieldsProto"]["userid"]["stringValue"];
-            userAccount = docSnapshot["_fieldsProto"]["accountAddress"]["stringValue"];
-            console.log(`지갑주소${userAccount}`);
-            
-            if (password == pw){
-                member = {
-                    "userid":`${id}`,
-                    "password":`${password}`,
-                    "userAccount" : `${userAccount}`
-                }
-                console.log(`member은 ${member}`);
-                console.log(`member은 ${JSON.stringify(member)}`);
+            try{
+                console.log(`이렇게온다 : ${docSnapshot}`);
+                password = docSnapshot["_fieldsProto"]["userpw"]["stringValue"];
+                userid = docSnapshot["_fieldsProto"]["userid"]["stringValue"];
+                userAccount = docSnapshot["_fieldsProto"]["accountAddress"]["stringValue"]
 
-                //원래는 return 하게 만들었었는데 동기/비동기에서 문제가 생김. 고로 여기서 res.send까지 해주는걸로 변경해야함
-                //return member;
-                res(JSON.stringify(member));
-            }
-            else{
-                console.log("로그인 실패");
+                if (password == pw){
+                    member = {
+                        "userid":`${id}`,
+                        "password":`${password}`,
+                        "userAccount":`${userAccount}`
+                    }
+                    console.log(`member은 ${member}`);
+                    console.log(`member은 ${JSON.stringify(member)}`);
+
+                    //원래는 return 하게 만들었었는데 동기/비동기에서 문제가 생김. 고로 여기서 res.send까지 해주는걸로 변경해야함
+                    //return member;
+                    res(JSON.stringify(member));
+                }
+                else{
+                    console.log("로그인 실패");
+                }
+            }catch(e){
+                console.log(`1_moduletest.js userlogin 메서드에서 ${e} 오류발생`);
             }
         },(err)=>{
             console.log(`${err}`);
         })
     });
 }
+
 //vzvxc
 //12341234
 
@@ -225,10 +210,24 @@ function userlogin(id,pw) {
 //}
 
 
+//jsonlink.com json 문법 검증
+app.use(bodyParser.urlencoded({extended:false}));
+//const getDocs = require('firebase/firestore');
 
-const module1 = require('./router/module1')(app,fs,admin,firestore,serviceAccount,join,userlogin,checkIdDuplicate,balanceInquiry);
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
+initWeb3();
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
 
-app.listen(port,()=>{
-    console.log(`${port}번호로 서버 실행중...`);
+const login = auth.getAuth();
+const db = firestore.getFirestore();
+const module1 = require('./router/module1')(app,fs,admin,firestore,serviceAccount,join,userlogin,checkIdDuplicate,balanceInquiry)
+
+app.listen(PORT,()=>{
+    console.log(`${PORT}번호로 서버 실행중...`);
 });
