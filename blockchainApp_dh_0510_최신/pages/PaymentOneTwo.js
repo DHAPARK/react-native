@@ -10,7 +10,23 @@ import BottomContainer from '../components/PaymentOneTwoComponents/BottomContain
 
 
 
-function PaymentOneTwo(){
+function PaymentOneTwo({navigation,route}){
+    const dataSet = route.params.data;
+    console.log(`넘어온값 : ${JSON.stringify(dataSet)}`);
+
+    const [Amount,setAmount] = React.useState('');
+    function AllCheckOkGoNextPage(Amount){
+        if(Amount !== ''){
+            dataSet['amount'] = Amount;
+            console.log(JSON.stringify(dataSet));
+            navigation.navigate('PaymentOneThree',{data:dataSet});
+        }else{
+            console.log('돈을 입력하셔야 넘어가죠');
+            return false;
+        }
+    }
+
+
     return (
         <PaymentOneTwoContainer>
             {/*맨위 로고와 결제 텍스트를 담은 컴포넌트 */}
@@ -18,7 +34,10 @@ function PaymentOneTwo(){
 
             <TopMiddleText/>
 
-            <InputAndConfirmBtn/>
+            <InputAndConfirmBtn 
+                onChangeText={(value)=>{setAmount(value)}}
+                onPress={()=>{AllCheckOkGoNextPage(Amount)}}
+            />
             
             <MiddlePriceContainer/>
 

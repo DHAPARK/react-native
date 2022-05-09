@@ -32,8 +32,12 @@ const Text = styled.Text`
 //이부분은 PaymentOneTwo를 보기 위해 visible:false로 테두리 안에 QR코드를 스캔해주세요
 //바로 밑부분에 놓은 컴포넌트
 const GotoPaymentOneTwo = styled.TouchableOpacity`
-    background-color:yellow;
-    width:10%;
+    border:1px solid black;
+    border-radius:15px;
+    background-color:white;
+    align-items:center;
+    width:100px;
+    padding-top:3%;
     height:5%;
     margin:0 auto;
 `;
@@ -79,10 +83,32 @@ function PaymentOne({navigation}){
     //console.log("test3 clear");
 
     const handleBarCodeScanned = ({type, data}) => {
-        setScanData(data);
+        setScanData(data.substring(1,data.length-1));
         console.log(`Data: ${data}`);
         console.log(`Type: ${type}`);
     };    
+    
+    var dataSet = {
+      'userid':'',
+      'userpassword':'',
+      'senderAddress':'',
+      'recevierAddress':'',
+      'amount':'',
+    }
+    
+   //var dataSet = {};
+
+    function AllCheckOkGoNextPage(scanData){
+      if(scanData!==''){
+        console.log(`scanData는 ${scanData}`);
+        dataSet["recevierAddress"] = scanData;
+        navigation.navigate('PaymentOneTwo',{data:dataSet});
+      }else{
+        console.log('scanData 든게 없습니다. Paymentone내부 오류');
+        return false;
+      }
+      
+    }
 
     //console.log("test4 clear");
     return(
@@ -98,7 +124,7 @@ function PaymentOne({navigation}){
             <PaymentOneMiddleText/>
             
             {/*PaymentOneTwo로 가기위한 컴포넌트 나중에 지워야함 */}
-            <GotoPaymentOneTwo onPress={()=>navigation.navigate('PaymentOneTwo')}/>
+            <GotoPaymentOneTwo onPress={()=>{AllCheckOkGoNextPage(scanData)}}><Text>SCAN</Text></GotoPaymentOneTwo>
 
             <PaymentOneBottomMyInfo/>
 

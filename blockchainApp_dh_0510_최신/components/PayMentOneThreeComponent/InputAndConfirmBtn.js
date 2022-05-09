@@ -1,18 +1,19 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import LongContainer from './LongContainer';
-import PaymentOneTwoPageButton from './PaymentOneTwoPageButton';
+import PaymentOneThreePageButton from './PaymentOneThreePageButton';
 import PTInput from './PTInput';
 import {useNavigation} from '@react-navigation/native';
 
-function InputAndConfirmBtn(){
+function InputAndConfirmBtn(props){
     const navigation = useNavigation();
     return(
         <LongContainer>
             <PTInput/>
-            <PaymentOneTwoPageButton
+            <PaymentOneThreePageButton
             text='확인'
-            onPress={()=>navigation.navigate('PaymentOneThree')}
+            onPress={props.onPress}
+            //onPress={()=>navigation.navigate('PaymentOneThree')}
             />
             
         </LongContainer>
