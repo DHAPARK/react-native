@@ -1,0 +1,25 @@
+{
+  "name": "nodejsday3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "1_http1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bignumber": "^1.1.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "^4.17.2",
+    "firebase-admin": "^10.2.0",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "pug": "2.0.0-beta11",
+    "semver": "^7.3.7",
+    "serve-static": "^1.14.2",
+    "web3": "^1.7.3"
+  }
+}
