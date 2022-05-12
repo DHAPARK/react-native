@@ -20,6 +20,10 @@ import axios from 'axios';
 import qs from 'qs';
 
 function PaymentOneThree({route}){
+    const [password,setPassword] = React.useState('');
+    
+
+
     function execute(){
         var dataSet = route.params.data;
         console.log(`PaymentOneThree 넘어온값 : ${JSON.stringify(dataSet)}`);
@@ -37,9 +41,9 @@ function PaymentOneThree({route}){
             console.log(`버근가 ${UserInfo2['userid']}`);
             var dataSet2 = {
                 'userId':UserInfo2['userid'],
-                'userPassword':UserInfo2['userpw'],
-                //'senderAddress':UserInfo2['userAccount'],
-                'senderAddress':'0xFF5DA73C3468f859478b759654Bd1782527d9040',
+                //'userPassword':UserInfo2['userpw'],
+                'userPassword':password,
+                'senderAddress':UserInfo2['userAccount'],
                 'receiverAddress':dataSet.recevierAddress,
                 'amount':dataSet.amount,
             }
@@ -53,11 +57,17 @@ function PaymentOneThree({route}){
                 url: `http://220.67.231.91:80/hscPayment`,
                 data: qs.stringify(dataSet2),
             }).then((res)=>{
-                console.log(res);
+                console.log(res.data);
                 console.log(`서버와 연결 성공`);
+                //201 잔액부족
+                
+                //100 성공
+
+                //202 비밀번호
                 //navigation.goBack();
             }).catch(error=>{
                 console.log(`서버와 연결 실패 ${error}`);
+                
                 throw new Error(error);
             });
         })
@@ -66,7 +76,10 @@ function PaymentOneThree({route}){
         <PaymentOneThreeContainer>
             <PaymentOneThreeTopSmallContainer/>
             <TopMiddleText/>
-            <InputAndConfirmBtn onPress={()=>{execute()}}/>
+            <InputAndConfirmBtn 
+                onPress={()=>{execute()}}
+                onChangeText={(value)=>{setPassword(value)}}
+            />
 
             <MiddleContainer/>
 
